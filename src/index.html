@@ -8,7 +8,67 @@
     <script type="module" src="./index.js"></script>
   </head>
   <body>
-    <!-- ❗️❗️❗️ Add partials like so for every page -->
-    <include src="./partials/example.html"></include>
+    <div id="login-box">
+      <div class="left">
+        <h1>Sign up</h1>
+
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="username"
+        />
+        <input type="text" id="email" name="email" placeholder="E-mail" />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="password"
+        />
+
+        <input type="submit" id="singUp" name="signup_submit" value="Sing up" />
+      </div>
+
+      <div class="right">
+        <span class="loginwith">sign with</span>
+
+        <button class="social-signin facebook">facebook</button>
+        <button class="social-signin twitter">twitter</button>
+        <button class="social-signin google">google</button>
+      </div>
+      <div class="or">OR</div>
+    </div>
+
+    <div id="login-box">
+      <div class="left">
+        <h1>Sign up</h1>
+
+        <input type="text" id="emailLogin" name="email" placeholder="E-mail" />
+        <input
+          type="password"
+          id="passwordLogin"
+          name="password"
+          placeholder="password"
+        />
+
+        <input type="submit" id="login" name="login" value="Login" />
+      </div>
+
+      <div class="right"></div>
+      <div class="or">OR</div>
+    </div>
+
+    <div id="login-box">
+      <div class="left">
+        <h1>Log out</h1>
+
+        <input type="submit" id="logOut" name="logOut" value="Log out" />
+      </div>
+
+      <div class="right"></div>
+      <div class="or">OR</div>
+    </div>
+    <!-- <include src="./partials/example.html"></include> -->
   </body>
+  <script type="module"></script>
 </html>

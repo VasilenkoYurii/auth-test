@@ -17,14 +17,20 @@
   "bugs": {
     "url": "https://github.com/goitacademy/parcel-project-template/issues"
   },
+  "alias": {
+    "firebase/app": "firebase/app/dist/index.cjs.js",
+    "firebase/databace": "firebase/databace/dist/index.cjs.js"
+  },
   "dependencies": {
+    "firebase": "^9.17.2",
     "modern-normalize": "^1.1.0"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.6.0",
     "parcel": "^2.6.0",
     "parcel-reporter-clean-dist": "^1.0.4",
-    "posthtml-include": "^1.7.4"
+    "posthtml-include": "^1.7.4",
+    "process": "^0.11.10"
   },
   "browserslist": "> 0.5%, last 2 versions, not dead"
 }
