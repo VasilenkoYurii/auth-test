@@ -1,5 +1,13 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, set, ref, update } from 'firebase/database';
+import {
+  getDatabase,
+  set,
+  ref,
+  update,
+  get,
+  child,
+  userId,
+} from 'firebase/database';
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -24,14 +32,18 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth();
 
-const refs = {
+const usersRef = ref(database, 'users');
+
+const refses = {
   body: document.querySelector('body'),
   singUp: document.querySelector('#singUp'),
   login: document.querySelector('#login'),
   logOut: document.querySelector('#logOut'),
 };
 
-refs.singUp.addEventListener('click', e => {
+// Добавление в базу пользователя
+
+refses.singUp.addEventListener('click', e => {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
   const username = document.getElementById('username').value;
@@ -60,7 +72,9 @@ refs.singUp.addEventListener('click', e => {
     });
 });
 
-refs.login.addEventListener('click', e => {
+// Вход пользователя в акаунт
+
+refses.login.addEventListener('click', e => {
   const email = document.getElementById('emailLogin').value;
   const password = document.getElementById('passwordLogin').value;
 
@@ -74,6 +88,7 @@ refs.login.addEventListener('click', e => {
       });
 
       alert('User loged in!');
+      location.reload();
     })
     .catch(error => {
       const errorCode = error.code;
@@ -83,10 +98,13 @@ refs.login.addEventListener('click', e => {
     });
 });
 
-refs.logOut.addEventListener('click', e => {
+// Выход польвателя с акаунта
+
+refses.logOut.addEventListener('click', e => {
   signOut(auth)
     .then(() => {
       alert('User loged out!');
+      location.reload();
     })
     .catch(error => {
       const errorCode = error.code;
@@ -95,12 +113,33 @@ refs.logOut.addEventListener('click', e => {
       alert(errorMessage);
     });
 });
+
+// Функция котоая делает чо угодно после того как пользователь
+// или залогинился или вышел с акаунтта
 
 const user = auth.currentUser;
 onAuthStateChanged(auth, user => {
   if (user) {
     const uid = user.uid;
-    refs.body.style.backgroundColor = 'teal';
+    refses.body.style.backgroundColor = 'teal';
+    // location.reload();
   } else {
   }
 });
+
+// Получение масива пользователей
+
+get(usersRef)
+  .then(snapshot => {
+    const users = [];
+    snapshot.forEach(childSnapshot => {
+      const user = childSnapshot.val();
+      console.log(user);
+      user.id = childSnapshot.key;
+      users.push(user);
+    });
+    console.log(users);
+  })
+  .catch(error => {
+    console.error(error);
+  });
