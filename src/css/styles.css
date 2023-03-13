@@ -135,7 +135,7 @@ main {
 
 .photo-card img {
   height: 180px;
-  width: 300px;
+  /* width: 300px; */
   display: block;
   border-radius: 4px 4px 0 0;
 }
@@ -274,6 +274,33 @@ input[type='checkbox'] {
 }
 
 /* modal auth */
+
+.modal-auth {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 99;
+  overflow: auto;
+  padding-bottom: 30px;
+  background-image: linear-gradient(
+    -100deg,
+    rgba(7, 7, 7, 0.9) 10%,
+    rgba(61, 61, 61, 0.8) 90%
+  );
+}
+
+.exit-modal {
+  position: fixed;
+  top: 30px;
+  right: 90px;
+  color: white;
+  font-size: 40px;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0px 15px 0 15px;
+}
 
 #login-box {
   position: relative;
@@ -421,4 +448,51 @@ button.social-signin.twitter {
 
 button.social-signin.google {
   background: #dd4b39;
+}
+
+.button-like-img {
+  display: block;
+}
+
+/* Выпадающее меню */
+
+.mainmenubtn {
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+.dropdown {
+  display: inline-block;
+  position: absolute;
+  right: 30px;
+  top: 6px;
+}
+.dropdown-child {
+  display: none;
+  background-color: black;
+  overflow: auto;
+}
+
+.dropdown:hover .dropdown-child {
+  height: 100vh;
+  width: 500px;
+  display: flex;
+  position: absolute;
+  right: -35px;
+  gap: 15px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photo-card__dropdown {
+  color: #dbdbdb;
+  border: 2px solid #f1eeee;
+  border-radius: 10px;
+}
+
+.photo-card__dropdown img {
+  display: block;
+  border-radius: 10px 10px 0 0;
 }

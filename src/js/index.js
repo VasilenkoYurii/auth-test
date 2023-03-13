@@ -6,165 +6,34 @@ import NewsApiService from './components/fetchImages';
 import renderImageGallery from './components/renderImageGallery';
 import btnUp from './components/btnUp';
 import { blackWhite, addStyleBlackWrite } from './components/blackWhite';
-//
-//
-import { initializeApp } from 'firebase/app';
+import { likeBtn, deliteImageCard } from './components/likeBtn';
 import {
-  getDatabase,
-  set,
-  ref,
-  update,
-  get,
-  child,
-  userId,
-} from 'firebase/database';
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-} from 'firebase/auth';
+  usersRef,
+  singUpFun,
+  loginFun,
+  logOutFun,
+  LOCALSTORAGE_USER,
+} from './firebace';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyDD_Eh4tyvM30ivpTHWqfHo7r2h0gDev4Y',
-  authDomain: 'project-goit2023-js.firebaseapp.com',
-  databaseURL: 'https://project-goit2023-js-default-rtdb.firebaseio.com',
-  projectId: 'project-goit2023-js',
-  storageBucket: 'project-goit2023-js.appspot.com',
-  messagingSenderId: '407142734195',
-  appId: '1:407142734195:web:6d45ec3cdde16415370d06',
-  measurementId: 'G-VMY0EQ75TG',
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-const auth = getAuth();
-
-const usersRef = ref(database, 'users');
-
-const refses = {
-  body: document.querySelector('body'),
-  singUp: document.querySelector('#singUp'),
-  login: document.querySelector('#login'),
-  logOut: document.querySelector('#logOut'),
-};
-
-// Добавление в базу пользователя
-
-refses.singUp.addEventListener('click', e => {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const username = document.getElementById('username').value;
-
-  console.log(email);
-
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(userCredential => {
-      //
-      const user = userCredential.user;
-
-      set(ref(database, 'users/' + user.uid), {
-        username: username,
-        email: email,
-        password: password,
-      });
-
-      alert('user created');
-      //
-    })
-    .catch(error => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      alert(errorMessage);
-    });
-});
-
-// Вход пользователя в акаунт
-
-refses.login.addEventListener('click', e => {
-  const email = document.getElementById('emailLogin').value;
-  const password = document.getElementById('passwordLogin').value;
-
-  signInWithEmailAndPassword(auth, email, password)
-    .then(userCredential => {
-      const user = userCredential.user;
-
-      const dt = new Date();
-      update(ref(database, 'users/' + user.uid), {
-        last_login: dt,
-      });
-
-      alert('User loged in!');
-      location.reload();
-    })
-    .catch(error => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      alert(errorMessage);
-    });
-});
-
-// Выход польвателя с акаунта
-
-refses.logOut.addEventListener('click', e => {
-  signOut(auth)
-    .then(() => {
-      alert('User loged out!');
-      location.reload();
-    })
-    .catch(error => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      alert(errorMessage);
-    });
-});
-
-// Функция котоая делает чо угодно после того как пользователь
-// или залогинился или вышел с акаунтта
-
-const user = auth.currentUser;
-onAuthStateChanged(auth, user => {
-  if (user) {
-    const uid = user.uid;
-    // refses.body.style.backgroundColor = 'teal';
-    // location.reload();
-  } else {
-  }
-});
-
-// Получение масива пользователей
-
-get(usersRef)
-  .then(snapshot => {
-    const users = [];
-    snapshot.forEach(childSnapshot => {
-      const user = childSnapshot.val();
-      console.log(user);
-      user.id = childSnapshot.key;
-      users.push(user);
-    });
-    console.log(users);
-  })
-  .catch(error => {
-    console.error(error);
-  });
-
-//
-//
 const refs = {
   searchForm: document.querySelector('#search-form'),
   galleryImage: document.querySelector('.gallery'),
   loadMoreBtn: document.querySelector('.load-more'),
   sentinel: document.querySelector('#sentinel'),
   toggle: document.querySelector('.toggle'),
+  body: document.querySelector('body'),
+  singUp: document.querySelector('#singUp'),
+  login: document.querySelector('#login'),
+  logOut: document.querySelector('#logOut'),
+  modalAuth: document.querySelector('.modal-auth'),
+  exitModal: document.querySelector('.exit-modal'),
+  authButton: document.querySelector('#authButton'),
+  deliteBtn: document.querySelector('.delite-button__dropdown'),
 };
+
 let messageShown = false;
 let totalHit = 0;
+export const likeArr = [];
 addStyleBlackWrite();
 
 const onEntry = entries => {
@@ -183,10 +52,13 @@ const modal = new SimpleLightbox('.gallery a');
 
 refs.searchForm.addEventListener('submit', userSearchImages);
 refs.toggle.addEventListener('click', blackWhite);
+refs.authButton.addEventListener('click', modalAuthOpen);
+refs.exitModal.addEventListener('click', exitModalFun);
 
 btnUp.addEventListener();
 
 function userSearchImages(e) {
+  // galleryImage.removeEventListener('click', onChangeButton);
   e.preventDefault();
   observer.unobserve(refs.sentinel);
   messageShown = false;
@@ -205,8 +77,6 @@ function userSearchImages(e) {
 
 function arrfetchImages() {
   setTimeout(() => {
-    console.log(totalHit);
-
     const totalPages = Math.ceil(totalHit / newsApiService.perPage);
 
     if (newsApiService.page > totalPages) {
@@ -216,7 +86,7 @@ function arrfetchImages() {
       observer.unobserve(refs.sentinel);
       return;
     }
-  }, 500);
+  }, 1000);
 
   newsApiService
     .fetchImages()
@@ -256,4 +126,47 @@ function appendArticlesMarkup(images) {
 
 function deleteRender() {
   refs.galleryImage.innerHTML = '';
+}
+
+function modalAuthOpen() {
+  refs.modalAuth.style.display = 'block';
+}
+
+function exitModalFun() {
+  refs.modalAuth.style.display = 'none';
+}
+
+refs.galleryImage.addEventListener('click', likeBtn);
+refs.body.addEventListener('click', deliteImageCard);
+refs.galleryImage.addEventListener('click', onChangeButton);
+
+function onChangeButton(event) {
+  const button = event.target;
+  if (event.target.classList.contains('delite-button__dropdown')) {
+    // Change text and class from "delite" to "like"
+    const button = event.target;
+    button.textContent = 'like';
+    button.classList.remove('delite-button__dropdown');
+    button.classList.add('button-like-img');
+  } else if (event.target.classList.contains('button-like-img')) {
+    // Change text and class from "like" to "delite"
+    const button = event.target;
+    button.textContent = 'delite';
+    button.classList.remove('button-like-img');
+    button.classList.add('delite-button__dropdown');
+  }
+  // Update local storage
+  const idToDelete = event.target.id;
+
+  const images = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER));
+  const updatedImages = images.filter(item => item.id !== Number(idToDelete));
+  localStorage.setItem(LOCALSTORAGE_USER, JSON.stringify(updatedImages));
+
+  const photoCards = document.querySelectorAll('.photo-card__dropdown');
+  photoCards.forEach(photoCard => {
+    const id = photoCard.querySelector('.delite-button__dropdown').id;
+    if (id === idToDelete) {
+      photoCard.remove();
+    }
+  });
 }

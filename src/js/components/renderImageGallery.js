@@ -1,3 +1,5 @@
+import { LOCALSTORAGE_USER } from '../firebace';
+
 export default function renderImageGallery(images) {
   return images
     .map(
@@ -9,9 +11,22 @@ export default function renderImageGallery(images) {
         views,
         comments,
         downloads,
+        id,
       }) => {
+        const buttonText = JSON.parse(
+          localStorage.getItem(LOCALSTORAGE_USER)
+        )?.some(item => item.id === id)
+          ? 'delite'
+          : 'like';
+
+        const buttonClass = JSON.parse(
+          localStorage.getItem(LOCALSTORAGE_USER)
+        )?.some(item => item.id === id)
+          ? 'delite-button__dropdown'
+          : 'button-like-img';
+
         return `
-        <a class="gallery__item__link" href="${largeImageURL}">
+        <div class="gallery__item__link" href="${largeImageURL}">
           <div class="photo-card">
               <img src="${webformatURL}" alt="${tags}" loading="lazy" />
             <div class="info">
@@ -20,8 +35,9 @@ export default function renderImageGallery(images) {
               <p class="info-item"><b>Comments</b>${comments}</p>
               <p class="info-item"><b>Downloads</b>${downloads}</p>
             </div>
+            <button class="${buttonClass}" id="${id}">${buttonText}</button>
           </div>
-        </a>`;
+        </div>`;
       }
     )
     .join('');

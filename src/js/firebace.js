@@ -15,6 +15,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from 'firebase/auth';
+import { renderImgLikes, dropdownChild } from './components/likeBtn';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDD_Eh4tyvM30ivpTHWqfHo7r2h0gDev4Y',
@@ -31,8 +32,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth();
+export let LOCALSTORAGE_USER = '';
 
-const usersRef = ref(database, 'users');
+export const usersRef = ref(database, 'users');
 
 const refses = {
   body: document.querySelector('body'),
@@ -43,7 +45,8 @@ const refses = {
 
 // Добавление в базу пользователя
 
-refses.singUp.addEventListener('click', e => {
+refses.singUp.addEventListener('click', singUpFun);
+export function singUpFun(e) {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
   const username = document.getElementById('username').value;
@@ -62,6 +65,7 @@ refses.singUp.addEventListener('click', e => {
       });
 
       alert('user created');
+      location.reload();
       //
     })
     .catch(error => {
@@ -70,11 +74,12 @@ refses.singUp.addEventListener('click', e => {
 
       alert(errorMessage);
     });
-});
+}
 
 // Вход пользователя в акаунт
 
-refses.login.addEventListener('click', e => {
+refses.login.addEventListener('click', loginFun);
+export function loginFun(e) {
   const email = document.getElementById('emailLogin').value;
   const password = document.getElementById('passwordLogin').value;
 
@@ -96,11 +101,12 @@ refses.login.addEventListener('click', e => {
 
       alert(errorMessage);
     });
-});
+}
 
 // Выход польвателя с акаунта
 
-refses.logOut.addEventListener('click', e => {
+refses.logOut.addEventListener('click', logOutFun);
+export function logOutFun(e) {
   signOut(auth)
     .then(() => {
       alert('User loged out!');
@@ -112,9 +118,9 @@ refses.logOut.addEventListener('click', e => {
 
       alert(errorMessage);
     });
-});
+}
 
-// Функция котоая делает чо угодно после того как пользователь
+// Функция котоая делает что угодно после того как пользователь
 // или залогинился или вышел с акаунтта
 
 const user = auth.currentUser;
@@ -122,8 +128,19 @@ onAuthStateChanged(auth, user => {
   if (user) {
     const uid = user.uid;
     refses.body.style.backgroundColor = 'teal';
-    // location.reload();
+    LOCALSTORAGE_USER = user.email;
+    console.log(LOCALSTORAGE_USER);
+    const images = renderImgLikes(
+      JSON.parse(localStorage.getItem(LOCALSTORAGE_USER))
+    );
+    dropdownChild.innerHTML = images;
   } else {
+    LOCALSTORAGE_USER = 'Guest';
+    console.log(LOCALSTORAGE_USER);
+    const images = renderImgLikes(
+      JSON.parse(localStorage.getItem(LOCALSTORAGE_USER))
+    );
+    dropdownChild.innerHTML = images;
   }
 });
 
