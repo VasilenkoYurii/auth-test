@@ -143,19 +143,16 @@ refs.galleryImage.addEventListener('click', onChangeButton);
 function onChangeButton(event) {
   const button = event.target;
   if (event.target.classList.contains('delite-button__dropdown')) {
-    // Change text and class from "delite" to "like"
     const button = event.target;
-    button.textContent = 'like';
+    button.textContent = 'Add to favorites';
     button.classList.remove('delite-button__dropdown');
     button.classList.add('button-like-img');
   } else if (event.target.classList.contains('button-like-img')) {
-    // Change text and class from "like" to "delite"
     const button = event.target;
-    button.textContent = 'delite';
+    button.textContent = 'Remove from favorites';
     button.classList.remove('button-like-img');
     button.classList.add('delite-button__dropdown');
   }
-  // Update local storage
   const idToDelete = event.target.id;
 
   const images = JSON.parse(localStorage.getItem(LOCALSTORAGE_USER));

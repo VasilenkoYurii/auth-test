@@ -41,6 +41,10 @@ const refses = {
   singUp: document.querySelector('#singUp'),
   login: document.querySelector('#login'),
   logOut: document.querySelector('#logOut'),
+  containerSignUp: document.querySelector('.login-box__signUp'),
+  containerLogIn: document.querySelector('.login-box__logIn'),
+  containerLogOut: document.querySelector('.login-box__logOut'),
+  userHi: document.querySelector('.user-hi'),
 };
 
 // Добавление в базу пользователя
@@ -51,7 +55,7 @@ export function singUpFun(e) {
   const password = document.getElementById('password').value;
   const username = document.getElementById('username').value;
 
-  console.log(email);
+  // console.log(email);
 
   createUserWithEmailAndPassword(auth, email, password)
     .then(userCredential => {
@@ -126,17 +130,18 @@ export function logOutFun(e) {
 const user = auth.currentUser;
 onAuthStateChanged(auth, user => {
   if (user) {
-    const uid = user.uid;
-    refses.body.style.backgroundColor = 'teal';
     LOCALSTORAGE_USER = user.email;
-    console.log(LOCALSTORAGE_USER);
     const images = renderImgLikes(
       JSON.parse(localStorage.getItem(LOCALSTORAGE_USER))
     );
     dropdownChild.innerHTML = images;
+
+    refses.userHi.textContent = `Welcome, ${user.email}`;
+    refses.containerSignUp.style.display = 'none';
+    refses.containerLogIn.style.display = 'none';
   } else {
+    refses.containerLogOut.style.display = 'none';
     LOCALSTORAGE_USER = 'Guest';
-    console.log(LOCALSTORAGE_USER);
     const images = renderImgLikes(
       JSON.parse(localStorage.getItem(LOCALSTORAGE_USER))
     );
@@ -151,12 +156,12 @@ get(usersRef)
     const users = [];
     snapshot.forEach(childSnapshot => {
       const user = childSnapshot.val();
-      console.log(user);
+      // console.log(user.username);
       user.id = childSnapshot.key;
       users.push(user);
     });
-    console.log(users);
+    // console.log(users);
   })
   .catch(error => {
-    console.error(error);
+    // console.error(error);
   });

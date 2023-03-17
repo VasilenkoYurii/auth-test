@@ -74,29 +74,13 @@ export function renderImgLikes(images) {
               <p class="info-item info-item__dropdown"><b>Comments</b>${comments}</p>
               <p class="info-item info-item__dropdown"><b>Downloads</b>${downloads}</p>
             </div>
-            <button class='delite-button__dropdown' id='${id}'>delite</button>
+            <button class='delite-button__dropdown' id='${id}'>Remove from favorites</button>
           </div>`;
     })
     .join('');
 }
 
 export function deliteImageCard(event) {
-  //   if (event.target.classList.contains('delite-button__dropdown')) {
-  //     // Найти элемент кнопки и изменить его текст и класс
-  //     const button = event.target;
-  //     button.textContent = 'like';
-  //     button.classList.remove('delite-button__dropdown');
-  //     button.classList.add('button-like-img');
-  //   }
-
-  //   if (event.target.classList.contains('button-like-img')) {
-  //     // Найти элемент кнопки и изменить его текст и класс
-  //     const button = event.target;
-  //     button.textContent = 'delite';
-  //     button.classList.remove('button-like-img');
-  //     button.classList.add('delite-button__dropdown');
-  //   }
-
   if (!event.target.classList.contains('delite-button__dropdown')) {
     return;
   }

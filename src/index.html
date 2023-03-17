@@ -19,6 +19,8 @@
         <input type="checkbox" class="toggle" />
       </div>
 
+      <div class="user-hi"></div>
+
       <form class="search-form" id="search-form">
         <input
           class="search-input"
@@ -43,10 +45,10 @@
         </button>
       </form>
 
-      <button id="authButton">Open modal auth</button>
+      <button class="auth-button" id="authButton">Authorization</button>
 
       <div class="dropdown">
-        <button class="mainmenubtn">Favorite</button>
+        <button class="mainmenubtn">Favorite picture</button>
         <div class="dropdown-child"></div>
       </div>
     </header>
@@ -54,7 +56,7 @@
     <main>
       <div class="modal-auth">
         <div class="exit-modal">X</div>
-        <div id="login-box">
+        <div id="login-box" class="login-box__signUp">
           <div class="left">
             <h1>Sign up</h1>
 
@@ -79,20 +81,11 @@
               value="Sing up"
             />
           </div>
-
-          <div class="right">
-            <span class="loginwith">sign with</span>
-
-            <button class="social-signin facebook">facebook</button>
-            <button class="social-signin twitter">twitter</button>
-            <button class="social-signin google">google</button>
-          </div>
-          <div class="or">OR</div>
         </div>
 
-        <div id="login-box">
+        <div id="login-box" class="login-box__logIn">
           <div class="left">
-            <h1>Sign up</h1>
+            <h1>Log in</h1>
 
             <input
               type="text"
@@ -109,20 +102,14 @@
 
             <input type="submit" id="login" name="login" value="Login" />
           </div>
-
-          <div class="right"></div>
-          <div class="or">OR</div>
         </div>
 
-        <div id="login-box">
+        <div id="login-box" class="login-box__logOut">
           <div class="left">
             <h1>Log out</h1>
 
             <input type="submit" id="logOut" name="logOut" value="Log out" />
           </div>
-
-          <div class="right"></div>
-          <div class="or">OR</div>
         </div>
       </div>
 

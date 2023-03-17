@@ -16,8 +16,8 @@ export default function renderImageGallery(images) {
         const buttonText = JSON.parse(
           localStorage.getItem(LOCALSTORAGE_USER)
         )?.some(item => item.id === id)
-          ? 'delite'
-          : 'like';
+          ? 'Remove from favorites'
+          : 'Add to favorites';
 
         const buttonClass = JSON.parse(
           localStorage.getItem(LOCALSTORAGE_USER)
